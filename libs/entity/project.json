@@ -1,0 +1,33 @@
+{
+  "name": "entity",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/entity/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/entity",
+        "main": "libs/entity/src/index.ts",
+        "tsConfig": "libs/entity/tsconfig.lib.json",
+        "assets": ["libs/entity/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/entity/**/*.ts", "libs/entity/package.json"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/entity/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
