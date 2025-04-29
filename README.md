@@ -1,4 +1,8 @@
-## Prerequisites
+# Backend Developer Test — NestJS API
+
+This project is a practical backend assessment built using **NestJS**, designed to evaluate skills in API development, middleware, error handling, database integration, and optional authentication and testing.
+
+## 📦 Prerequisites
 
 - NodeJS version `>=20.0.0` — recommended to use [NVM](https://github.com/nvm-sh/nvm)
 - Linux-based terminals are preferred: `bash`, `shell`, or `git bash`
@@ -7,7 +11,7 @@
   - `Prettier`
   - `Nx Console`
 
-## Commands
+## 🚀 Getting Started
 
 ### Install/Add Dependencies
 
@@ -29,44 +33,63 @@ yarn nx run server:build
 yarn nx run server:dev
 ```
 
-## SERVER Application Structure
+## 🔐 Environment Variables
 
-Inside [global](libs/global/src) folder, there are global infrastructure modules
-Such as TypeORM
+Specify your environment variables in the following file: [env](apps/server/.env)
 
-Inside [config](apps/server/src/config) folder, there is config module
-There are ENV variables for server configuration. Such as PORT, GLOBAL_PREFIX, JWT
+## 📁 Project Structure Overview
 
-Default application docs: [http:localhost:3000/api/docs](http:localhost:3000/api/docs)
+```
+apps/
+  └── server/                 # Main NestJS application
+      ├── src/
+      │   ├── app/
+      │   │   └── services/
+      │   │       └── users/        # User service, controller, DTOs
+      │   └── config/               # Configuration modules (PORT, JWT, etc.)
+      └── main.ts                   # Application entry point
+
+libs/
+  ├── global/                # Global infrastructure modules (e.g., TypeORM)
+  └── utils/                 # Shared utilities (e.g., interceptors, filters)
+```
 
 ## Libraries
 
 New libraries can be created using Nx Console
 
-## Task 1: Basic API development
+### ✅ Task 1: Basic API Development — CRUD for Users
 
-Objective: Build a simple CRUD API for managing a list of users.
-Inside [users](apps/server/src/app/services/users/users.controller.ts)
+- **Location**: [`users.controller.ts`](apps/server/src/app/services/users/users.controller.ts)
+- **Features**:
 
-## Task 2: Middleware implementation
+ - Create, Read, Update, Delete users
+ - Input validation with DTOs
+ - Error handling for invalid operations
 
-Objective: Implement a middleware to log the time taken for each API request.
-Inside [utils](libs/utils/src/lib/logging.interceptor.ts)
-Use inside [main.ts](apps/server/src/main.ts)
+### ✅ Task 2: Middleware implementation
 
-## Task 3: Error handling
+- **Location**: [`logging.interceptor.ts`](libs/utils/src/lib/logging.interceptor.ts)
+- Logs time taken, endpoint, and method used
+- **Integrated in**: [`main.ts`](apps/server/src/main.ts)
 
-Objective: Create a global error-handling mechanism.
-Inside [utils](libs/utils/src/lib/global-exception.filter.ts)
-Use inside [main.ts](apps/server/src/main.ts)
+### ✅ Task 3: Global Error Handling
 
-## Task 4: Database integration
+- **Location**: [`global-exception.filter.ts`](libs/utils/src/lib/global-exception.filter.ts)
+- Catches and formats exceptions globally (e.g., `NotFoundException`, `BadRequestException`)
+- **Integrated in**: [`main.ts`](apps/server/src/main.ts)
 
-Objective: Set up a PostgreSQL database connection and integrate it with the API.
-Inside [global](libs/global/src/lib)
-Use inside [users](apps/server/src/app/services/users/users.service.ts)
+### ✅ Task 4: PostgreSQL Database Integration
 
-## Task 6 (optional): JWT authentication
+- **ORM**: TypeORM
+- **Config**: [`libs/global/src/lib`](libs/global/src/lib)
+- **Usage Example**: [`users.service.ts`](apps/server/src/app/services/users/users.service.ts)
 
-Inside [auth](apps/server/src/app/services/users/users.controller.ts)
+### 🛂 Task 6 (Optional): JWT Authentication
 
+- Token validation via guards
+- **Controller**: [`users.controller.ts`](apps/server/src/app/services/users/users.controller.ts)
+
+## 📃 API Documentation
+
+- Swagger available at: [http://localhost:3000/api/docs](http://localhost:3000/api/docs)
