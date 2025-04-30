@@ -9,21 +9,13 @@ import {
 } from 'class-validator';
 
 export class AuthRequestDto {
-  @ApiProperty({ description: 'username пользователя' })
+  @ApiProperty({ description: 'Username' })
   @IsString()
   username: string;
 
-  @ApiProperty({ description: 'Пароль пользователя' })
+  @ApiProperty({ description: 'User password' })
   @IsString()
   password: string;
-
-  @ApiProperty({
-    description: 'Код с двухфакторной аутентификатора',
-    required: false,
-  })
-  @IsNumberString()
-  @IsOptional()
-  verificationCode?: string;
 }
 
 export class GenerateRefreshTokenDto {
