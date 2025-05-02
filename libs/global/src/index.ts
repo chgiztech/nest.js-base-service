@@ -1,1 +1,1 @@
-export * from './lib/typeorm.infra-module';
+export * from './lib/typeorm.global-module';
