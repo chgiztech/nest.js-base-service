@@ -2,6 +2,7 @@ import { PassportEntity, PassportHistoryEntity, UserEntity } from '@entity';
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
@@ -57,8 +58,13 @@ export class UsersService {
       where: { id },
       relations,
     });
+
+    if (!result) {
+      throw new NotFoundException('User not found');
+    }
+
     if (result?.isDeleted) {
-      throw new UnauthorizedException('USER_DELETED');
+      throw new BadRequestException('USER_BLOCKED');
     }
     return result;
   }
@@ -128,7 +134,7 @@ export class UsersService {
     });
 
     if (!existUser) {
-      throw new BadRequestException('User not found');
+      throw new NotFoundException('User not found');
     }
 
     await this.userRepo.save({
@@ -170,9 +176,12 @@ export class UsersService {
     });
 
     if (!existUser) {
-      throw new BadRequestException('User not found');
+      throw new NotFoundException('User not found');
     }
 
+    if (existUser?.isDeleted) {
+      throw new BadRequestException('USER_BLOCKED');
+    }
     await this.userRepo.update(id, { isDeleted: true });
   }
 
