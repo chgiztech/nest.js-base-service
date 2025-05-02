@@ -1,3 +1,3 @@
 # Utils
 
-Какие-либо общие функции
+Any general functions
