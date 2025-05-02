@@ -137,6 +137,10 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
+    if (existUser?.isDeleted) {
+      throw new BadRequestException('USER_BLOCKED');
+    }
+
     await this.userRepo.save({
       id: id,
       ...dto,
