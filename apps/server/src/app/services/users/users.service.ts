@@ -26,6 +26,8 @@ export class UsersService {
     private readonly userRepo: Repository<UserEntity>,
     @InjectRepository(PassportHistoryEntity)
     private readonly passportHistoryRepo: Repository<PassportHistoryEntity>,
+    @InjectRepository(PassportEntity)
+    private readonly passportRepo: Repository<PassportHistoryEntity>,
   ) {}
 
   async findAll(dto: UserListRequestDto): Promise<UserEntity[]> {
@@ -60,7 +62,7 @@ export class UsersService {
     });
 
     if (!result) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('NOT_FOUND');
     }
 
     if (result?.isDeleted) {
@@ -69,7 +71,7 @@ export class UsersService {
     return result;
   }
 
-  async createUser(dto: UserCreateRequestDto): Promise<UserEntity> {
+  async createUser(dto: UserCreateRequestDto) {
     const existUser = await this.userRepo.findOne({
       where: [
         {
@@ -85,9 +87,7 @@ export class UsersService {
 
     const secretToken = speakeasy.generateSecret({ length: 20 }).base32;
 
-    const password = this.generatePassword();
-
-    const passwordHash = await bcrypt.hash(password, 8);
+    const passwordHash = await bcrypt.hash(dto.password, 8);
 
     const queryRunner = this.dataSource.createQueryRunner();
 
@@ -123,7 +123,7 @@ export class UsersService {
       where: { id: createResult.identifiers[0].id },
       relations,
     });
-    user.passport.password = password;
+    user.passport.password = dto.password;
 
     return user;
   }
@@ -134,7 +134,7 @@ export class UsersService {
     });
 
     if (!existUser) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('NOT_FOUND');
     }
 
     if (existUser?.isDeleted) {
@@ -180,28 +180,34 @@ export class UsersService {
     });
 
     if (!existUser) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('NOT_FOUND');
     }
 
     if (existUser?.isDeleted) {
       throw new BadRequestException('USER_BLOCKED');
     }
-    await this.userRepo.update(id, { isDeleted: true });
-  }
 
-  private generatePassword() {
-    const generatedPassword = passwordGenerator.generate({
-      symbols: true,
-      uppercase: true,
-      numbers: true,
-      lowercase: true,
-      strict: true,
-    });
+    const queryRunner = this.dataSource.createQueryRunner();
 
-    return generatedPassword.match(/[@#!$%&*]/)
-      ? generatedPassword
-      : `${generatedPassword}${
-          '@#!$%&*'.split('')[Math.floor(Math.random() * '@#!$%&*'.length)]
-        }`;
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      await this.passportHistoryRepo.delete({ user: { id } });
+      await this.passportRepo.delete({ user: { id } });
+      await this.userRepo.delete(id);
+
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      console.log('Transaction err: ', err);
+      throw new BadRequestException(err);
+    } finally {
+      await queryRunner.release();
+    }
+
+    return {
+      message: 'User deleted',
+    };
   }
 }

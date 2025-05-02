@@ -4,12 +4,10 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { RoleEntity } from './Role.entity';
 import { PassportEntity } from './Passport.entity';
 
@@ -51,24 +49,6 @@ export const transformer = {
     return DecipherFromBase64ToUtf8(value);
   },
 };
-
-export const transformerUId = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  to(value: any): any {
-    if (!value) {
-      return null;
-    }
-    return bcrypt.hashSync(value, process.env['HASH_SALT']!);
-  },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-  from(_value: any): any {
-    return '************';
-  },
-};
-
-export function getUIdHash(UId: string) {
-  return bcrypt.hashSync(UId, process.env['HASH_SALT']!);
-}
 
 @Entity({ name: 'users' })
 export class UserEntity {
