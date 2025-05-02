@@ -5,12 +5,10 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-  NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-@Catch(NotFoundException, BadRequestException)
+@Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
 
