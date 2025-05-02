@@ -52,6 +52,31 @@
                 }
             }
         },
+        "migration": {
+            "executor": "nx:run-commands",
+            "configurations": {
+              "generate": {
+                "command": "ts-node --project ./tsconfig.app.json -r tsconfig-paths/register ../../node_modules/typeorm/cli.js migration:generate -p -d src/typeorm-cli-datasource.ts",
+                "cwd": "apps/server",
+                "envFile": "apps/server/.env"
+              },
+              "create": {
+                "command": "ts-node --project ./tsconfig.app.json -r tsconfig-paths/register ../../node_modules/typeorm/cli.js migration:create",
+                "cwd": "apps/server",
+                "envFile": "apps/server/.env"
+              },
+              "run": {
+                "command": "ts-node --project ./tsconfig.app.json -r tsconfig-paths/register ../../node_modules/typeorm/cli.js migration:run -d src/typeorm-cli-datasource.ts -t=each",
+                "cwd": "apps/server",
+                "envFile": "apps/server/.env"
+              },
+              "rollback": {
+                "command": "ts-node --project ./tsconfig.app.json -r tsconfig-paths/register ../../node_modules/typeorm/cli.js migration:revert -d src/typeorm-cli-datasource.ts",
+                "cwd": "apps/server",
+                "envFile": "apps/server/.env"
+              }
+            }
+          },
         "lint": {
             "executor": "@nx/eslint:lint",
             "outputs": [

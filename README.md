@@ -33,6 +33,24 @@ yarn nx run server:build
 yarn nx run server:dev
 ```
 
+**Run migrations (if required)**
+
+```bash
+yarn nx run server:migration:run
+```
+
+**Create migration**
+
+```bash
+yarn nx run server:migration:create migrations/AddTables
+```
+
+**Rollback migration**
+
+```bash
+yarn nx run server:migration:rollback
+```
+
 ## 🔐 Environment Variables
 
 Specify your environment variables in the following file: [env](apps/server/.env)
@@ -63,9 +81,9 @@ New libraries can be created using Nx Console
 - **Location**: [`users.controller.ts`](apps/server/src/app/services/users/users.controller.ts)
 - **Features**:
 
- - Create, Read, Update, Delete users
- - Input validation with DTOs
- - Error handling for invalid operations
+- Create, Read, Update, Delete users
+- Input validation with DTOs
+- Error handling for invalid operations
 
 ### ✅ Task 2: Middleware implementation
 
