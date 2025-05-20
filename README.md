@@ -1,7 +1,3 @@
-# Backend Developer Test — NestJS API
-
-This project is a practical backend assessment built using **NestJS**, designed to evaluate skills in API development, middleware, error handling, database integration, and optional authentication and testing.
-
 ## 📦 Prerequisites
 
 - NodeJS version `>=20.0.0` — recommended to use [NVM](https://github.com/nvm-sh/nvm)
